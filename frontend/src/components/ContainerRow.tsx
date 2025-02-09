@@ -36,7 +36,7 @@ const ContainerRow: React.FC<ContainerRowProps> = ({ container, ping }) => {
   return (
     <>
       <tr className={rowClass} style={{ cursor: 'pointer' }} onClick={toggleExpand}>
-        <td>{container.id}</td>
+        <td>{container.id.substring(0, 12)}</td>
         <td>{ping ? ping.ip : 'N/A'}</td>
         <td>{ping ? `${ping.last_ping_latency} ms` : 'N/A'}</td>
         <td>{ping ? new Date(ping.last_ping_time).toLocaleString() : 'N/A'}</td>
