@@ -34,13 +34,13 @@
 1. Клонирование репозитория:
 
    ```bash
-   % git clone https://github.com/jeorji/container-pinger.git
+   git clone https://github.com/jeorji/container-pinger.git
    ```
 
 2. Переход в каталог проекта:
 
    ```bash
-   % cd container-pinger
+   cd container-pinger
    ```
 
 3. Создание файла конфигурации:
@@ -48,13 +48,13 @@
    Скопируйте файл `.env.example` в `.env` и отредактируйте переменные окружения при необходимости:
 
    ```bash
-   container-pinger % cp .env.example .env
+   cp .env.example .env
    ```
 
 4. Запуск контейнеров:
 
    ```bash
-   container-pinger % docker compose up
+   docker compose up
    ```
 
    Контейнеры будут собраны и запущены.
