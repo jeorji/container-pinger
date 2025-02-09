@@ -1,0 +1,70 @@
+version: '3.9'
+services:
+  ingress:
+    image: nginx:stable-alpine
+    volumes:
+      - ./nginx-ingress.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "80:80"
+    networks:
+      - app_net
+    depends_on:
+      - frontend
+
+  backend:
+    build:
+      context: ./backend
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:8080:8080"
+    networks:
+      - app_net
+    depends_on:
+      database:
+        condition: service_healthy
+
+  pinger:
+    build:
+      context: ./pinger
+    network_mode: host
+    env_file:
+      - .env
+    extra_hosts:
+      - "backend:127.0.0.1"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - backend
+
+  frontend:
+    build:
+      context: ./frontend
+    env_file:
+      - .env
+    networks:
+      - app_net
+    depends_on:
+      - backend
+
+  database:
+    image: postgres:latest
+    env_file:
+      - .env
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - app_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+
+volumes:
+  postgres-data:
+
+networks:
+  app_net:
+    driver: bridge

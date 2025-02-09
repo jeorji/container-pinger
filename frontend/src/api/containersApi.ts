@@ -1,4 +1,3 @@
-// src/api/containersApi.ts
 import axios from 'axios';
 
 export interface Ping {
@@ -17,9 +16,11 @@ export interface Container {
   pings: Ping[] | null;
 }
 
+const API_BASE_URL = (window as any).env.API_BASE_URL;
+
 export const fetchContainers = async (): Promise<Container[]> => {
   try {
-    const response = await axios.get<Container[]>('http://localhost:8080/api/containers');
+    const response = await axios.get<Container[]>(`${API_BASE_URL}/api/containers`);
     return response.data;
   } catch (error) {
     console.error('Ошибка при получении контейнеров:', error);
