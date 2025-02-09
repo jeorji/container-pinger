@@ -11,6 +11,7 @@ const Dashboard: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [autoRefreshSeconds, setAutoRefreshSeconds] = useState<number>(0);
   const [countdown, setCountdown] = useState<number>(autoRefreshSeconds);
+  const [hideWithoutPing, setHideWithoutPing] = useState<boolean>(false);
 
   const loadContainers = async () => {
     setLoading(true);
@@ -45,6 +46,10 @@ const Dashboard: React.FC = () => {
   }, [autoRefreshSeconds]);
 
   const filteredContainers = containers.filter(container => {
+    if (hideWithoutPing && (!container.pings || container.pings.length === 0)) {
+      return false;
+    }
+
     const term = searchTerm.toLowerCase();
     const matchBasic =
       container.id.toLowerCase().includes(term) ||
@@ -69,57 +74,69 @@ const Dashboard: React.FC = () => {
       )}
 
       <Card className="mb-4">
-        <Card.Header>
-          <div className="d-flex flex-wrap justify-content-between align-items-center">
-            <div className="mb-2">
-              <InputGroup>
-                <InputGroup.Text>Поиск</InputGroup.Text>
-                <Form.Control
-                  type="text"
-                  placeholder="Введите ID, имя или IP..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+          <Card.Header>
+            <div className="d-flex flex-wrap justify-content-between align-items-center">
+              <div className="mb-2">
+                <InputGroup>
+                  <InputGroup.Text>Поиск</InputGroup.Text>
+                  <Form.Control
+                    type="text"
+                    placeholder="Введите ID, имя или IP..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </InputGroup>
+              </div>
+
+              <div className="mb-2 d-flex align-items-center">
+                <Form.Check 
+                  type="switch"
+                  id="hideWithoutPingSwitch"
+                  label="Скрыть контейнеры без пинга"
+                  checked={hideWithoutPing}
+                  onChange={(e) => setHideWithoutPing(e.target.checked)}
                 />
-              </InputGroup>
-            </div>
+              </div>
 
-            <div className="mb-2 d-flex align-items-center">
-              <Form.Select
-                style={{ width: '120px' }}
-                value={autoRefreshSeconds}
-                onChange={(e) => {
-                  const val = Number(e.target.value);
-                  setAutoRefreshSeconds(val);
-                  setCountdown(val);
-                }}
-              >
-                <option value={0}>Выкл</option>
-                <option value={5}>5 сек</option>
-                <option value={10}>10 сек</option>
-                <option value={30}>30 сек</option>
-                <option value={60}>1 мин</option>
-              </Form.Select>
-              {autoRefreshSeconds > 0 && (
-                <div className="ms-3">
-                  <strong>{countdown}</strong> сек.
+              <div className="mb-2 d-flex align-items-center">
+                <Form.Select
+                  style={{ width: '120px' }}
+                  value={autoRefreshSeconds}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    setAutoRefreshSeconds(val);
+                    setCountdown(val);
+                  }}
+                >
+                  <option value={0}>Выкл</option>
+                  <option value={5}>5 сек</option>
+                  <option value={10}>10 сек</option>
+                  <option value={30}>30 сек</option>
+                  <option value={60}>1 мин</option>
+                </Form.Select>
+                <div className="ms-3" style={{ minWidth: '200px' }}>
+                  {autoRefreshSeconds > 0 ? (
+                    <><strong>{countdown}</strong> сек.</>
+                  ) : (
+                    <span style={{ visibility: 'hidden' }}>Placeholder</span>
+                  )}
                 </div>
-              )}
-            </div>
+              </div>
 
-            <div className="mb-2">
-              <Button variant="primary" onClick={loadContainers} disabled={loading}>
-                {loading ? (
-                  <>
-                    <Spinner animation="border" size="sm" /> Загрузка...
-                  </>
-                ) : (
-                  'Обновить'
-                )}
-              </Button>
+              <div className="mb-2">
+                <Button variant="primary" onClick={loadContainers} disabled={loading}>
+                  {loading ? (
+                    <>
+                      <Spinner animation="border" size="sm" /> Загрузка...
+                    </>
+                  ) : (
+                    'Обновить'
+                  )}
+                </Button>
+              </div>
             </div>
-          </div>
-        </Card.Header>
-      </Card>
+          </Card.Header>
+        </Card>
 
       {loading && containers.length === 0 ? (
         <div className="text-center">
