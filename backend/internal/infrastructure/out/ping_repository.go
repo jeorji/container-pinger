@@ -2,6 +2,7 @@ package repository
 
 import (
 	"backend/internal/domain"
+	"backend/internal/infrastructure"
 	"context"
 	"fmt"
 
@@ -12,7 +13,7 @@ type pingPG struct {
 	db *pgxpool.Pool
 }
 
-func NewPingPGRepo(db *pgxpool.Pool) domain.PingRepository {
+func NewPingPGRepo(db *pgxpool.Pool) infrastructure.PingRepository {
 	return &pingPG{db: db}
 }
 

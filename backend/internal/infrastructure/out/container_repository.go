@@ -2,6 +2,7 @@ package repository
 
 import (
 	"backend/internal/domain"
+	"backend/internal/infrastructure"
 	"context"
 	"fmt"
 
@@ -11,7 +12,7 @@ import (
 type containerPG struct {
 	db *pgxpool.Pool
 }
-func NewContainerPGRepo(db *pgxpool.Pool) domain.ContainerRepository {
+func NewContainerPGRepo(db *pgxpool.Pool) infrastructure.ContainerRepository {
 	return &containerPG{db: db}
 }
 

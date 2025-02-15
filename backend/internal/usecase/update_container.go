@@ -5,14 +5,15 @@ import (
 	"context"
 
 	"backend/internal/domain"
+	"backend/internal/infrastructure"
 )
 
 type ContainerUpdateUseCase struct {
-	ContainerRepo  domain.ContainerRepository
+	ContainerRepo  infrastructure.ContainerRepository
 }
 
 func NewContainerUpdateUseCase(
-	containerRepo domain.ContainerRepository,
+	containerRepo infrastructure.ContainerRepository,
 ) *ContainerUpdateUseCase {
 	return &ContainerUpdateUseCase{
         ContainerRepo: containerRepo,

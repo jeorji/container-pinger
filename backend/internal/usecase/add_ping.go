@@ -4,13 +4,14 @@ import (
 	"context"
 
 	"backend/internal/domain"
+	"backend/internal/infrastructure"
 )
 
 type AddPingUseCase struct {
-	PingRepo domain.PingRepository
+	PingRepo infrastructure.PingRepository
 }
 
-func NewPingUseCase(pingRepo domain.PingRepository) *AddPingUseCase {
+func NewPingUseCase(pingRepo infrastructure.PingRepository) *AddPingUseCase {
 	return &AddPingUseCase{
 		PingRepo: pingRepo,
 	}

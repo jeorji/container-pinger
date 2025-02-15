@@ -4,14 +4,15 @@ import (
 	"context"
 
 	"backend/internal/domain"
+	"backend/internal/infrastructure"
 )
 
 type ContainerStatsUseCase struct {
-	ContainerRepo domain.ContainerRepository
-	PingRepo      domain.PingRepository
+	ContainerRepo infrastructure.ContainerRepository
+	PingRepo      infrastructure.PingRepository
 }
 
-func NewContainerStatsUseCase(containerRepo domain.ContainerRepository, pingRepo domain.PingRepository) *ContainerStatsUseCase {
+func NewContainerStatsUseCase(containerRepo infrastructure.ContainerRepository, pingRepo infrastructure.PingRepository) *ContainerStatsUseCase {
 	return &ContainerStatsUseCase{
 		ContainerRepo: containerRepo,
 		PingRepo:      pingRepo,
