@@ -5,12 +5,12 @@ import (
 
 	"github.com/prometheus-community/pro-bing"
 
-	"pinger/internal/domain"
+	"pinger/internal/infrastructure"
 )
 
 type ProBingService struct{}
 
-func NewProBingService() domain.PingService {
+func NewProBingService() infrastructure.PingService {
 	return &ProBingService{}
 }
 

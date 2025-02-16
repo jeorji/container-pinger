@@ -53,6 +53,8 @@ func TestCreateOrUpdateContainerByID(t *testing.T) {
 				if err == nil || err.Error() != tc.expectedErr.Error() {
 					t.Fatalf("expected error: %v, got: %v", tc.expectedErr, err)
 				}
+			} else if err != nil {
+				t.Fatalf("unexpected error: %v", err)
 			}
 		})
 	}

@@ -6,16 +6,17 @@ import (
 	"sync"
 
 	"pinger/internal/domain"
+	"pinger/internal/infrastructure"
 )
 
 type ContainerSyncUseCase struct {
-	DockerRepo  domain.ContainerRepository
-	BackendRepo domain.BackendRepository
+	DockerRepo  infrastructure.ContainerRepository
+	BackendRepo infrastructure.BackendRepository
 }
 
 func NewContainerSyncUseCase(
-	dockerRepo domain.ContainerRepository,
-	backendRepo domain.BackendRepository,
+	dockerRepo infrastructure.ContainerRepository,
+	backendRepo infrastructure.BackendRepository,
 ) *ContainerSyncUseCase {
 	return &ContainerSyncUseCase{
 		DockerRepo:  dockerRepo,
@@ -23,7 +24,8 @@ func NewContainerSyncUseCase(
 	}
 }
 
-func (uc *ContainerSyncUseCase) SyncContainers(ctx context.Context, all bool) error { containers, err := uc.DockerRepo.ListContainers(all)
+func (uc *ContainerSyncUseCase) SyncContainers(ctx context.Context, all bool) error {
+	containers, err := uc.DockerRepo.ListContainers(all)
 	if err != nil {
 		return err
 	}
@@ -35,7 +37,7 @@ func (uc *ContainerSyncUseCase) SyncContainers(ctx context.Context, all bool) er
 			defer wg.Done()
 			fullInfo, _, err := uc.DockerRepo.InspectContainer(c.ID)
 			if err != nil {
-                log.Printf("%s: %v", c.ID, err)
+				log.Printf("%s: %v", c.ID, err)
 				return
 			}
 			if err := uc.BackendRepo.UpdateContainer(fullInfo); err != nil {

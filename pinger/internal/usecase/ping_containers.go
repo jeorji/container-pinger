@@ -7,18 +7,19 @@ import (
 	"time"
 
 	"pinger/internal/domain"
+	"pinger/internal/infrastructure"
 )
 
 type PingContainersUseCase struct {
-	DockerRepo  domain.ContainerRepository
-	BackendRepo domain.BackendRepository
-	PingService domain.PingService
+	DockerRepo  infrastructure.ContainerRepository
+	BackendRepo infrastructure.BackendRepository
+	PingService infrastructure.PingService
 }
 
 func NewPingContainersUseCase(
-	dockerRepo domain.ContainerRepository,
-	backendRepo domain.BackendRepository,
-	pingService domain.PingService,
+	dockerRepo infrastructure.ContainerRepository,
+	backendRepo infrastructure.BackendRepository,
+	pingService infrastructure.PingService,
 ) *PingContainersUseCase {
 	return &PingContainersUseCase{
 		DockerRepo:  dockerRepo,
@@ -40,7 +41,7 @@ func (uc *PingContainersUseCase) PingContainers(ctx context.Context, all bool) e
 			defer wg.Done()
 			_, ips, err := uc.DockerRepo.InspectContainer(c.ID)
 			if err != nil {
-                log.Printf("%s: %v", c.ID, err)
+				log.Printf("%s: %v", c.ID, err)
 				return
 			}
 
@@ -50,7 +51,7 @@ func (uc *PingContainersUseCase) PingContainers(ctx context.Context, all bool) e
 				}
 				status, latency, pingErr := uc.PingService.Ping(ip)
 				if pingErr != nil {
-                    log.Printf("%s: %s %v", c.ID, ip, pingErr)
+					log.Printf("%s: %s %v", c.ID, ip, pingErr)
 				}
 
 				pingRes := domain.PingResult{
