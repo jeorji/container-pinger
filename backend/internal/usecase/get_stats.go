@@ -25,7 +25,7 @@ func (uc *ContainerStatsUseCase) GetAllStats(ctx context.Context) ([]domain.Cont
 		return nil, err
 	}
 
-	var stats []domain.ContainerStatsDTO
+    stats := []domain.ContainerStatsDTO{}
 
 	for _, container := range containers {
 		pings, err := uc.PingRepo.GetLastPingForContainer(ctx, &container)
